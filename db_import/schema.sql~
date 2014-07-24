@@ -1,0 +1,59 @@
+-- Table: entry
+
+-- DROP TABLE entry;
+
+CREATE TABLE entry
+(
+  id bigserial NOT NULL,
+  event_id integer NOT NULL,
+  selection_id integer,
+  selection character varying(50) NOT NULL,
+  odds real NOT NULL,
+  number_bets integer,
+  volume integer,
+  latest_taken timestamp without time zone,
+  first_taken timestamp without time zone,
+  win_flag smallint,
+  in_play character varying(2),
+  settled_date timestamp without time zone,
+  CONSTRAINT pk PRIMARY KEY (id )
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE entry
+  OWNER TO postgres;
+
+
+-- Table: event
+
+-- DROP TABLE event;
+
+CREATE TABLE event
+(
+  event_id integer NOT NULL,
+  sports_id integer NOT NULL,
+  scheduled_off timestamp without time zone NOT NULL,
+  actual_off timestamp without time zone,
+  cat character varying(100) NOT NULL,
+  sub_cat character varying(100),
+  home character varying(80) NOT NULL,
+  away character varying(80) NOT NULL,
+  market character varying(100),
+  CONSTRAINT event_pkey PRIMARY KEY (event_id )
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE event
+  OWNER TO postgres;
+
+
+
+ALTER TABLE entry
+  ADD CONSTRAINT fk_event FOREIGN KEY (event_id)
+      REFERENCES event (event_id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE CASCADE;
+
+
+
